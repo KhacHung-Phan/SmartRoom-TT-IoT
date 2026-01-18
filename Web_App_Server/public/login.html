@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartRoom Gr2</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartRoom">
+</head>
+<body class="auth-page" data-auth="public">
+  <div class="auth-card">
+    <div class="auth-left">
+      <a class="brand" href="login.html">
+        <div class="brand-logo"><i class="fa-solid fa-house-signal"></i></div>
+        <div class="brand-title">
+          <strong>SmartRoom HelloWorld</strong>
+          <span>Login / Register • Demo</span>
+        </div>
+      </a>
+
+      <h2 style="margin:12px 0 8px;">Chào mừng quay lại</h2>
+      <p>
+        Đăng nhập tài khoản admin để có <b>trạng thái đăng nhập</b>
+        và trang <b>quản lý người đăng ký</b>.
+        <br><br>
+        <b>Admin quản lý:</b> <code>khachung@gmail.com</code> <!--/ <code>@123456</code>--> 
+      </p>
+    </div>
+
+    <div class="auth-right">
+      <div class="tabs">
+        <button class="tab active" id="tabLogin"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</button>
+        <button class="tab" id="tabRegister"><i class="fa-solid fa-user-plus"></i> Đăng ký</button>
+      </div>
+
+      <form class="auth-form active" id="loginForm">
+        <div class="field">
+          <label>Email</label>
+          <input id="login_email" type="email" placeholder="nhập địa chỉ email" required />
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>Mật khẩu</label>
+          <input id="login_password" type="password" placeholder="nhập mật khẩu" required />
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn primary" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</button>
+        </div>
+      </form>
+
+      <form class="auth-form" id="registerForm">
+        <div class="form-row">
+          <div class="field">
+            <label>Họ tên</label>
+            <input id="reg_name" placeholder="VD: Khac Hung" required />
+          </div>
+          <div class="field">
+            <label>SĐT</label>
+            <input id="reg_phone" placeholder="VD: 0388..." />
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>Email</label>
+          <input id="reg_email" type="email" placeholder="you@email.com" required />
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div class="field">
+            <label>Mật khẩu</label>
+            <input id="reg_password" type="password" placeholder="Tối thiểu 6 ký tự" required />
+          </div>
+          <div class="field">
+            <label>Nhập lại</label>
+            <input id="reg_password2" type="password" placeholder="Nhập lại mật khẩu" required />
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn primary" type="submit"><i class="fa-solid fa-user-plus"></i> Tạo tài khoản</button>
+        </div>
+      </form>
+
+      <!--<p class="helper" style="margin-top:10px">
+        *Khuyên dùng chạy qua server local: <code>python -m http.server</code>
+      </p>-->
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script defer src="auth.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="login.js"></script>
+</body>
+</html>

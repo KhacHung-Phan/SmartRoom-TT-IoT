@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "Web_App_Server"
+		},
+		{
+			"name": "FlatformIO",
+			"path": "FlatformIO"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Web_App_Server"
+	}
+}

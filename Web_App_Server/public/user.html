@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Users • SmartRoom IoT</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartRoom">
+</head>
+<body data-auth="protected">
+  <header>
+    <div class="header-inner">
+      <button class="icon-btn" id="btnSidebar" aria-label="Bật/ẩn sidebar" title="Alt+S"><i class="fa-solid fa-bars"></i></button>
+
+      <a class="brand" href="dashboard.html">
+        <div class="brand-logo"><i class="fa-solid fa-house-signal"></i></div>
+        <div class="brand-title"><strong>SmartRoom HelloWorld</strong><span>KhacHung - AnhDuy - MinhTri</span></div>
+      </a>
+
+      <div class="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInput" placeholder="Tìm user (tên, email, role...)" />
+        <button class="icon-btn" id="btnClearSearch" aria-label="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <nav class="nav">
+        <a href="dashboard.html" data-crumb="Dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="sensors.html" data-crumb="Cảm biến"><i class="fa-solid fa-microchip"></i> Sensors</a>
+        <a href="controls.html" data-crumb="Điều khiển"><i class="fa-solid fa-sliders"></i> Controls</a>
+        <a href="realtime.html" data-crumb="Realtime"><i class="fa-solid fa-wave-square"></i> Realtime</a>
+        <a href="user.html" data-crumb="Người dùng"><i class="fa-solid fa-users-gear"></i> Users</a>
+      </nav>
+
+      <div class="conn-pill"><span class="dot" id="connDot"></span><span id="connText">Online</span></div>
+
+      <div class="user-menu" id="userMenu">
+        <button class="user-btn" id="userBtn">
+          <span class="avatar"><i class="fa-solid fa-user"></i></span>
+          <span class="user-meta"><strong id="userName">User</strong><span id="userRole">ROLE</span></span>
+          <i class="fa-solid fa-chevron-down" style="color:var(--muted)"></i>
+        </button>
+        <div class="user-drop">
+          <div class="hd">
+            <div style="display:flex;gap:10px;align-items:center">
+              <i class="fa-solid fa-id-badge"></i>
+              <div style="min-width:0">
+                <div id="userEmail" style="color:rgba(255,255,255,.92);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">-</div>
+                <div style="margin-top:3px">Trạng thái: <b style="color:rgba(255,255,255,.9)">Đã đăng nhập</b></div>
+              </div>
+            </div>
+          </div>
+          <a href="user.html"><i class="fa-solid fa-users-gear"></i> Quản lý người dùng</a>
+          <button id="logoutBtn" class="danger"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app" id="app">
+    <aside>
+      <div class="side-top">
+        <div class="label"><i class="fa-regular fa-compass"></i> <span>Menu</span></div>
+        <button class="icon-btn" id="btnSidebarSmall"><i class="fa-solid fa-angles-left" id="sidebarChevron"></i></button>
+      </div>
+
+      <div class="side-menu">
+        <a class="side-link" href="dashboard.html" data-crumb="Dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+        <a class="side-link" href="sensors.html" data-crumb="Cảm biến"><i class="fa-solid fa-microchip"></i><span>Cảm biến</span></a>
+        <a class="side-link" href="controls.html" data-crumb="Điều khiển"><i class="fa-solid fa-sliders"></i><span>Điều khiển</span></a>
+        <a class="side-link" href="realtime.html" data-crumb="Realtime"><i class="fa-solid fa-wave-square"></i><span>Realtime</span></a>
+        <div class="side-divider"></div>
+        <a class="side-link" href="user.html" data-crumb="Người dùng"><i class="fa-solid fa-users-gear"></i><span>Người dùng</span></a>
+        <a class="side-link" href="support.html" data-crumb="Hỗ trợ"><i class="fa-solid fa-circle-question"></i><span>Hỗ trợ</span></a>
+      </div>
+
+      <div class="side-footer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;gap:10px;align-items:center">
+            <i class="fa-solid fa-keyboard"></i>
+            <span class="tip-text">Alt + <span class="kbd">S</span></span>
+          </div>
+          <span class="kbd">v1</span>
+        </div>
+        <button class="logout" id="sidebarLogoutBtn"><i class="fa-solid fa-right-from-bracket"></i> <span class="tip-text">Đăng xuất</span></button>
+      </div>
+    </aside>
+
+    <main>
+      <div class="crumb">
+        <div class="crumb-left"><i class="fa-solid fa-location-dot"></i> <span>Đang ở:</span> <span class="path" id="breadcrumbPath">Trang chủ / Người dùng</span></div>
+        <div class="crumb-right"><div class="pill"><i class="fa-solid fa-lock"></i> Admin only</div></div>
+      </div>
+
+      <section id="notAllowed" style="display:none">
+        <div class="section-head"><div class="title"><i class="fa-solid fa-ban"></i> Không có quyền</div></div>
+        <div class="grid">
+          <div class="card">
+            <h4><i class="fa-solid fa-circle-exclamation"></i> Chỉ admin được xem</h4>
+            <p class="helper">
+              Đăng nhập admin demo: <code>khachung@gmail.com</code><!-- / <code>@123456</code>-->
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="usersWrap">
+        <div class="section-head">
+          <div class="title"><i class="fa-solid fa-users-gear"></i> Quản lý người đăng ký</div>
+          <div class="meta"><button class="btn primary" id="btnAddUser"><i class="fa-solid fa-user-plus"></i> Thêm user</button></div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên</th><th>Email</th><th>SĐT</th><th>Role</th><th>Trạng thái</th><th>Ngày tạo</th><th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+          <p class="helper" style="margin-top:10px"><!--*Demo LocalStorage. Làm thật: Firebase Auth + Firestore/RTDB.--></p>
+        </div>
+      </section>
+
+      <!-- RFID allowlist (admin) -->
+      <section id="rfidAdmin" style="margin-top:18px">
+        <div class="section-head">
+          <div class="title"><i class="fa-solid fa-id-card-clip"></i> Cấu hình RFID allowlist</div>
+          <div class="meta" style="display:flex;gap:10px;flex-wrap:wrap">
+            <span class="pill"><i class="fa-solid fa-list-check"></i> Tổng: <strong id="rfidStatTotal">0</strong></span>
+            <span class="pill"><i class="fa-solid fa-circle-check"></i> Enabled: <strong id="rfidStatEnabled">0</strong></span>
+          </div>
+        </div>
+
+        <!--<div class="grid cols-3">
+          <div class="card">
+            <h4><i class="fa-solid fa-plus"></i> Thêm UID</h4>
+            <div class="sub">Nhập UID hex (không dấu cách), ví dụ: <code>04ABCDEF12</code></div>
+            <div class="form-row" style="margin-top:12px">
+              <div class="field">
+                <label>UID</label>
+                <input id="rfid_uid" placeholder="04ABCDEF12" />
+              </div>
+              <div class="field">
+                <label>Tên (tuỳ chọn)</label>
+                <input id="rfid_name" placeholder="VD: Thẻ admin" />
+              </div>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn primary" id="btnRfidAdd"><i class="fa-solid fa-floppy-disk"></i> Thêm</button>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 2">
+            <h4><i class="fa-solid fa-diagram-project"></i> Cách hoạt động</h4>
+            <p class="helper" style="margin-top:8px">
+              UID được lưu trong Firebase RTDB tại <code>config/rfid/allow/&lt;UID&gt;</code>.
+              Bridge (Node.js) sẽ tự đồng bộ sang MQTT topic <code>room1/rfid/allow</code> (retain),
+              ESP32 subscribe topic này để cập nhật allowlist ngay lập tức.
+            </p>
+            <p class="helper" style="margin-top:8px">
+              Gợi ý: để test nhanh, quẹt thẻ 1 lần xem UID xuất hiện trong Realtime/Event, copy qua ô UID rồi bấm Thêm.
+            </p>
+          </div> 
+        </div>-->
+
+        <div class="grid cols-3">
+          <div class="card" style="grid-column: span 3">
+            <h4><i class="fa-solid fa-plus"></i> Thêm UID</h4>
+
+            <div class="sub rfid-hint">
+              Nhập UID hex (không dấu cách), ví dụ:
+              <code class="inline-chip">04ABCDEF12</code>
+            </div>
+
+            <div class="rfid-form-grid" style="margin-top:12px">
+              <div class="field" style="min-width:0">
+                <label>UID</label>
+                <input id="rfid_uid" placeholder="04ABCDEF12" />
+              </div>
+
+              <div class="field" style="min-width:0">
+                <label>Tên (tuỳ chọn) <span class="muted" style="font-weight:400">– VD: Thẻ admin</span></label>
+                <input id="rfid_name" placeholder="Admin" />
+              </div>
+
+              <div class="field" style="min-width:0">
+                <button class="btn primary" id="btnRfidAdd" style="height:42px;width:100%">
+                  <i class="fa-solid fa-floppy-disk"></i> Thêm
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="table-wrap" style="margin-top:12px">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:200px">UID</th>
+                <th>Tên</th>
+                <th style="width:160px">Trạng thái</th>
+                <th style="width:220px">Cập nhật</th>
+                <th style="width:240px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="rfidTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="modal-backdrop" id="userModalBackdrop">
+        <div class="modal">
+          <div class="mh">
+            <div class="t"><i class="fa-solid fa-user-pen"></i> <span id="userModalTitle">User</span></div>
+            <button class="icon-btn" id="btnCloseUserModal"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="mb">
+            <input type="hidden" id="f_id" />
+            <div class="form-row">
+              <div class="field"><label>Tên</label><input id="f_name" /></div>
+              <div class="field"><label>Email</label><input id="f_email" /></div>
+            </div>
+            <div class="form-row" style="margin-top:12px">
+              <div class="field"><label>SĐT</label><input id="f_phone" /></div>
+              <div class="field"><label>Mật khẩu (để trống nếu không đổi)</label><input id="f_password" type="password" /></div>
+            </div>
+            <div class="form-row" style="margin-top:12px">
+              <div class="field">
+                <label>Role</label>
+                <select id="f_role"><option value="user">user</option><option value="admin">admin</option></select>
+              </div>
+              <div class="field">
+                <label>Trạng thái</label>
+                <select id="f_status"><option value="active">active</option><option value="disabled">disabled</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="mf">
+            <button class="btn" id="btnSaveUser"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="foot-brand">
+        <div class="brand-logo"><i class="fa-solid fa-house-signal"></i></div>
+        <div><h5 style="margin:0 0 6px;">SmartRoom HelloWorld</h5><p>Users management.</p></div>
+      </div>
+      <div class="foot-col"><h5>Liên hệ</h5><div class="contact"><div><i class="fa-solid fa-envelope"></i> <a href="mailto:khachungmt2k5@gmail.com">khachungmt2k5@gmail.com</a></div></div></div>
+      <div class="foot-col"><h5>Hỗ trợ</h5><ul><li>Góp ý UI/UX</li></ul></div>
+    </div>
+    <div class="copyright"><span>@ <span id="year"></span> • Khắc Hùng</span><span><i class="fa-solid fa-shield"></i> Demo</span></div>
+  </footer>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script type="module" src="firebase-init.js"></script>
+  <script defer src="auth.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="user.js"></script>
+  <script defer src="rfid-admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Realtime • SmartRoom IoT</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartRoom">
+</head>
+<body data-auth="protected">
+  <header>
+    <div class="header-inner">
+      <button class="icon-btn" id="btnSidebar" aria-label="Bật/ẩn sidebar" title="Alt+S"><i class="fa-solid fa-bars"></i></button>
+
+      <a class="brand" href="dashboard.html">
+        <div class="brand-logo"><i class="fa-solid fa-house-signal"></i></div>
+        <div class="brand-title"><strong>SmartRoom HelloWorld</strong><span>KhacHung - AnhDuy - MinhTri</span></div>
+      </a>
+
+      <div class="search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInput" placeholder="Tìm PIR/RFID/SHT31..." />
+        <button class="icon-btn" id="btnClearSearch" aria-label="Xóa"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <nav class="nav">
+        <a href="dashboard.html" data-crumb="Dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="sensors.html" data-crumb="Cảm biến"><i class="fa-solid fa-microchip"></i> Sensors</a>
+        <a href="controls.html" data-crumb="Điều khiển"><i class="fa-solid fa-sliders"></i> Controls</a>
+        <a href="realtime.html" data-crumb="Realtime"><i class="fa-solid fa-wave-square"></i> Realtime</a>
+      </nav>
+
+      <div class="conn-pill"><span class="dot" id="connDot"></span><span id="connText">Online</span></div>
+
+      <div class="user-menu" id="userMenu">
+        <button class="user-btn" id="userBtn">
+          <span class="avatar"><i class="fa-solid fa-user"></i></span>
+          <span class="user-meta"><strong id="userName">User</strong><span id="userRole">ROLE</span></span>
+          <i class="fa-solid fa-chevron-down" style="color:var(--muted)"></i>
+        </button>
+        <div class="user-drop">
+          <div class="hd">
+            <div style="display:flex;gap:10px;align-items:center">
+              <i class="fa-solid fa-id-badge"></i>
+              <div style="min-width:0">
+                <div id="userEmail" style="color:rgba(255,255,255,.92);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">-</div>
+                <div style="margin-top:3px">Trạng thái: <b style="color:rgba(255,255,255,.9)">Đã đăng nhập</b></div>
+              </div>
+            </div>
+          </div>
+          <a href="user.html"><i class="fa-solid fa-users-gear"></i> Quản lý người dùng</a>
+          <button id="logoutBtn" class="danger"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app" id="app">
+    <aside>
+      <div class="side-top">
+        <div class="label"><i class="fa-regular fa-compass"></i> <span>Menu</span></div>
+        <button class="icon-btn" id="btnSidebarSmall"><i class="fa-solid fa-angles-left" id="sidebarChevron"></i></button>
+      </div>
+
+      <div class="side-menu">
+        <a class="side-link" href="dashboard.html" data-crumb="Dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+        <a class="side-link" href="sensors.html" data-crumb="Cảm biến"><i class="fa-solid fa-microchip"></i><span>Cảm biến</span></a>
+        <a class="side-link" href="controls.html" data-crumb="Điều khiển"><i class="fa-solid fa-sliders"></i><span>Điều khiển</span></a>
+        <a class="side-link" href="realtime.html" data-crumb="Realtime"><i class="fa-solid fa-wave-square"></i><span>Realtime</span></a>
+        <div class="side-divider"></div>
+        <a class="side-link" href="user.html" data-crumb="Người dùng"><i class="fa-solid fa-users-gear"></i><span>Người dùng</span></a>
+        <a class="side-link" href="support.html" data-crumb="Hỗ trợ"><i class="fa-solid fa-circle-question"></i><span>Hỗ trợ</span></a>
+      </div>
+
+      <div class="side-footer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;gap:10px;align-items:center">
+            <i class="fa-solid fa-keyboard"></i>
+            <span class="tip-text">Alt + <span class="kbd">S</span></span>
+          </div>
+          <span class="kbd">v1</span>
+        </div>
+        <button class="logout" id="sidebarLogoutBtn"><i class="fa-solid fa-right-from-bracket"></i> <span class="tip-text">Đăng xuất</span></button>
+      </div>
+    </aside>
+
+    <main>
+      <div class="crumb">
+        <div class="crumb-left"><i class="fa-solid fa-location-dot"></i> <span>Đang ở:</span> <span class="path" id="breadcrumbPath">Trang chủ / Realtime</span></div>
+        <div class="crumb-right">
+          <div class="pill"><i class="fa-regular fa-clock"></i> Update: <strong id="lastUpdate">--:--:--</strong></div>
+          <div class="pill"><i class="fa-solid fa-shield-halved"></i> Mode: <strong id="modeText">HOME</strong></div>
+        </div>
+      </div>
+
+      <section>
+        <div class="section-head"><div class="title"><i class="fa-solid fa-wave-square"></i> Bảng realtime</div><div class="meta">Update 2s</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th style="width:180px">Cảm biến</th><th>Giá trị</th><th style="width:200px">Chất lượng</th><th style="width:220px">Cập nhật</th></tr>
+            </thead>
+            <tbody id="statusTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head"><div class="title"><i class="fa-solid fa-list"></i> Event stream</div><div class="meta">Tối đa 25 dòng</div></div>
+        <div class="grid">
+          <div class="card">
+            <div id="eventStream" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="foot-brand">
+        <div class="brand-logo"><i class="fa-solid fa-house-signal"></i></div>
+        <div>
+          <h5 style="margin:0 0 6px;">SmartRoom HelloWorld</h5>
+          <p>Trang Realtime: bảng + event stream.</p>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>Liên hệ</h5>
+        <div class="contact">
+          <div><i class="fa-solid fa-envelope"></i> <a href="mailto:khachungmt2k5@gmail.com">khachungmt2k5@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>Gợi ý</h5>
+        <ul><li>Lọc bằng ô tìm kiếm</li></ul>
+      </div>
+    </div>
+    <div class="copyright"><span>@ <span id="year"></span> • Tác giả: <b>Khắc Hùng</b></span><span><i class="fa-solid fa-shield"></i> Demo</span></div>
+  </footer>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <!-- MQTT -->
+  <script defer src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script defer src="mqtt-client.js"></script>
+
+  <!-- Firebase (Realtime Database + Auth) -->
+  <script type="module" src="firebase-init.js"></script>
+
+  <script defer src="auth.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="iot-device.js"></script>
+
+  <!-- NOTE: iot-sim.js bỏ ở chế độ thật để tránh đè dữ liệu -->
+  <!-- <script defer src="iot-sim.js"></script> -->
+
+  <script defer src="realtime.js"></script>
+</body>
+</html>
